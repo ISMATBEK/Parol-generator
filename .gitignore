@@ -1,18 +1,46 @@
-# Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
-[Bb]in/
 
-# Other files and folders
-.settings/
+---
 
-# Executables
-*.swf
-*.air
-*.ipa
-*.apk
+### 📄 `securepassgen.py`
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+```python
+import random
+import argparse
+import string
+
+def generate_password(length, use_upper, use_lower, use_digits, use_special):
+    characters = ''
+    if use_upper:
+        characters += string.ascii_uppercase
+    if use_lower:
+        characters += string.ascii_lowercase
+    if use_digits:
+        characters += string.digits
+    if use_special:
+        characters += string.punctuation
+
+    if not characters:
+        raise ValueError("At least one character type must be selected.")
+
+    password = ''.join(random.choice(characters) for _ in range(length))
+    return password
+
+def main():
+    parser = argparse.ArgumentParser(description="🔐 Secure Password Generator")
+    parser.add_argument('--length', type=int, default=12, help='Password length')
+    parser.add_argument('--uppercase', action='store_true', help='Include uppercase letters')
+    parser.add_argument('--lowercase', action='store_true', help='Include lowercase letters')
+    parser.add_argument('--digits', action='store_true', help='Include digits')
+    parser.add_argument('--special', action='store_true', help='Include special characters')
+
+    args = parser.parse_args()
+
+    try:
+        password = generate_password(args.length, args.uppercase, args.lowercase, args.digits, args.special)
+        print(f"🔑 Generated Password: {password}")
+    except ValueError as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    main()
+
